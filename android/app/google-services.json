@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "919870069549",
+    "project_id": "jekitchen-f100f",
+    "storage_bucket": "jekitchen-f100f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:919870069549:android:d40315dd55290ef71051a4",
+        "android_client_info": {
+          "package_name": "com.example.jekitchen"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "919870069549-1sl84lpapriakalgq383quuhigurf60m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCeOh06H6SOTBDdm3bSvV08H_iYHZdgUDY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "919870069549-1sl84lpapriakalgq383quuhigurf60m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
