@@ -17,7 +17,7 @@ final FirestoreService firestoreService = FirestoreService();
 final TextEditingController textController = TextEditingController();
 
 class _HomePageState extends State<HomePage> {
-  void openDatabBox() {
+  void openDatabBox({String? docID}) {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -27,8 +27,11 @@ class _HomePageState extends State<HomePage> {
               actions: [
                 ElevatedButton(
                     onPressed: () {
-                      firestoreService.addData(textController.text);
-
+                      if (docID == null) {
+                        firestoreService.addData(textController.text);
+                      } else {
+                        firestoreService.updateData(docID, textController.text);
+                      }
                       textController.clear();
 
                       Navigator.pop(context);
@@ -42,7 +45,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Recepie"),
+        title: const Text("Recepie"),
       ),
       floatingActionButton: FloatingActionButton(
           onPressed: openDatabBox, child: const Icon(Icons.add)),
@@ -64,6 +67,17 @@ class _HomePageState extends State<HomePage> {
 
                 return ListTile(
                   title: Text(recepieText),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                      onPressed: () => openDatabBox(docID: docID),
+                      icon: const Icon(Icons.settings)),
+                      IconButton(
+                      onPressed: () => firestoreService.deleteData(docID),
+                      icon: const Icon(Icons.delete)),
+                    ],
+                  )
                 );
               },
             );

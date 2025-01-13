@@ -21,4 +21,15 @@ class FirestoreService {
   }
 
   //update
+Future<void> updateData(String id, String judul) {
+  return database.doc(id).update({
+    'Judul': judul,
+    'timestamp': Timestamp.now(),
+  });
+}
+
+  //delete
+  Future<void> deleteData(String id) {
+    return database.doc(id).delete();
+  }
 }
