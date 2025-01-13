@@ -4,11 +4,12 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:jekitchen/Dashboard.dart';
 import 'package:jekitchen/controllers/dashboard_controller.dart';
+import 'package:jekitchen/firebase_options.dart';
 import 'package:jekitchen/pages/login_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
