@@ -25,7 +25,7 @@ Future<void> updateData(String id, String judul) {
   return database.doc(id).update({
     'Judul': judul,
     'timestamp': Timestamp.now(),
-  });
+  }); 
 }
 
   //delete
