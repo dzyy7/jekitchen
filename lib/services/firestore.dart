@@ -4,31 +4,30 @@ class FirestoreService {
   final CollectionReference database =
       FirebaseFirestore.instance.collection("database");
 
-  //create
-  Future<void> addData(String judul) {
+  // Create
+  Future<void> addData(String judul, String deskripsi) {
     return database.add({
       'Judul': judul,
+      'Deskripsi': deskripsi,
       'timestamp': Timestamp.now(),
     });
   }
 
-  //read
+  // Read
   Stream<QuerySnapshot> getDatasStream() {
-    final dataStream =
-        database.orderBy('timestamp', descending: true).snapshots();
-
-    return dataStream;
+    return database.orderBy('timestamp', descending: true).snapshots();
   }
 
-  //update
-Future<void> updateData(String id, String judul) {
-  return database.doc(id).update({
-    'Judul': judul,
-    'timestamp': Timestamp.now(),
-  }); 
-}
+  // Update
+  Future<void> updateData(String id, String judul, String deskripsi) {
+    return database.doc(id).update({
+      'Judul': judul,
+      'Deskripsi': deskripsi,
+      'timestamp': Timestamp.now(),
+    });
+  }
 
-  //delete
+  // Delete
   Future<void> deleteData(String id) {
     return database.doc(id).delete();
   }

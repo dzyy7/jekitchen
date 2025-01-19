@@ -12,14 +12,18 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-//firestore service
+// Firestore Service Instance
 final FirestoreService firestoreService = FirestoreService();
 
-//text controller
-final TextEditingController textController = TextEditingController();
-
 class _HomePageState extends State<HomePage> {
-  void openDatabBox({String? docID}) {
+  final TextEditingController textController = TextEditingController();
+  final TextEditingController descController = TextEditingController();
+
+  void openDatabBox(
+      {String? docID, String? initialTitle, String? initialDescription}) {
+    textController.text = initialTitle ?? '';
+    descController.text = initialDescription ?? '';
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -28,14 +32,30 @@ class _HomePageState extends State<HomePage> {
           docID == null ? "Add Recipe" : "Edit Recipe",
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-        content: TextField(
-          controller: textController,
-          decoration: InputDecoration(
-            labelText: "Recipe Title",
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: textController,
+              decoration: InputDecoration(
+                labelText: "Recipe Title",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
             ),
-          ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: descController,
+              decoration: InputDecoration(
+                labelText: "Description",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              maxLines: 3,
+            ),
+          ],
         ),
         actions: [
           TextButton(
@@ -48,11 +68,14 @@ class _HomePageState extends State<HomePage> {
           ElevatedButton(
             onPressed: () {
               if (docID == null) {
-                firestoreService.addData(textController.text);
+                firestoreService.addData(
+                    textController.text, descController.text);
               } else {
-                firestoreService.updateData(docID, textController.text);
+                firestoreService.updateData(
+                    docID, textController.text, descController.text);
               }
               textController.clear();
+              descController.clear();
               Navigator.pop(context);
             },
             style: ElevatedButton.styleFrom(
@@ -113,13 +136,11 @@ class _HomePageState extends State<HomePage> {
         title: const Text("Recipe Manager"),
         backgroundColor: AppColors.primary,
       ),
-      //floating button
       floatingActionButton: FloatingActionButton(
         onPressed: openDatabBox,
         backgroundColor: AppColors.primary,
         child: const Icon(Icons.add, color: Colors.white),
       ),
-
       body: StreamBuilder<QuerySnapshot>(
         stream: firestoreService.getDatasStream(),
         builder: (context, snapshot) {
@@ -135,33 +156,86 @@ class _HomePageState extends State<HomePage> {
 
                 Map<String, dynamic> data =
                     document.data() as Map<String, dynamic>;
-
                 String recepieText = data['Judul'];
+                String? description = data['Deskripsi'];
 
-                return Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  elevation: 4,
-                  margin: const EdgeInsets.symmetric(vertical: 8),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.all(15),
-                    title: Text(
-                      recepieText,
-                      style: AppTextStyles.headline1(16),
+                return GestureDetector(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15)),
+                        title: Text(
+                          recepieText,
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.primary),
+                        ),
+                        content: Text(
+                          description ?? 'No description available',
+                          style: TextStyle(fontSize: 14, color: Colors.black87),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text("Close",
+                                style: TextStyle(color: Colors.redAccent)),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
                     ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          onPressed: () => openDatabBox(docID: docID),
-                          icon: const Icon(Icons.edit, color: Colors.blue),
+                    elevation: 8,
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    color: Colors.white,
+                    shadowColor: Colors.black.withOpacity(0.2),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [const Color.fromARGB(255, 255, 177, 144), AppColors.primary],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                         ),
-                        IconButton(
-                          onPressed: () => confirmDelete(docID),
-                          icon: const Icon(Icons.delete, color: Colors.red),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.all(15),
+                        title: Text(
+                          recepieText,
+                          style: AppTextStyles.headline1(16),
                         ),
-                      ],
+                        subtitle: Text(
+                          description ?? '',
+                          style: AppTextStyles.bodyText(14),
+                          maxLines: 2, // Membatasi deskripsi hanya 2 baris
+                          overflow: TextOverflow
+                              .ellipsis, // Menambahkan elipsis di akhir jika teks lebih panjang
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              onPressed: () => openDatabBox(
+                                docID: docID,
+                                initialTitle: recepieText,
+                                initialDescription: description,
+                              ),
+                              icon: const Icon(Icons.edit, color: Colors.white),
+                            ),
+                            IconButton(
+                              onPressed: () => confirmDelete(docID),
+                              icon:
+                                  const Icon(Icons.delete, color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 );
