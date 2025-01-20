@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:jekitchen/route/myapp_route.dart';
 
 class LoginController extends GetxController {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
@@ -32,11 +33,15 @@ class LoginController extends GetxController {
     }
   }
   Future<void> logout() async {
-    try {
-      await firebaseAuth.signOut(); // Logout dari Firebase
-      await googleSignIn.signOut(); // Logout dari Google Sign-In
-    } catch (e) {
-      Get.snackbar("Error", "Failed to logout: $e");
-    }
+  try {
+    await firebaseAuth.signOut(); // Logout dari Firebase
+    await googleSignIn.signOut(); // Logout dari Google Sign-In
+    
+    // Set nilai user ke null
+    user.value = null;
+  } catch (e) {
+    Get.snackbar("Error", "Failed to logout: $e");
   }
+}
+
 }

@@ -5,7 +5,7 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:jekitchen/controllers/dashboard_controller.dart';
 import 'package:jekitchen/pages/home_page.dart';
 import 'package:jekitchen/pages/profile_page.dart';
-import 'package:jekitchen/pages/wishlist_page.dart';
+import 'package:jekitchen/pages/notification_page.dart';
 
 class Dashboardpage extends StatelessWidget {
   const Dashboardpage({super.key});
@@ -16,7 +16,7 @@ class Dashboardpage extends StatelessWidget {
 
     final List<Widget> menus = [
       HomePage(),
-      WishlistPage(),
+      NotificationPage(),
       ProfilePage(),
     ];
 
@@ -34,8 +34,8 @@ class Dashboardpage extends StatelessWidget {
               label: "Home",
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.favorite),
-              label: "Wishlist",
+              icon: Icon(Icons.notifications),
+              label: "Notification",
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.home_outlined),

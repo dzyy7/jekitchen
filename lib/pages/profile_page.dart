@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:jekitchen/component/color.dart';
 import 'package:jekitchen/component/font.dart';
 import 'package:jekitchen/controllers/login_controller.dart';
+import 'package:jekitchen/pages/login_page.dart';
 
 class ProfilePage extends StatelessWidget {
   final LoginController loginController = Get.put(LoginController());
@@ -106,10 +107,31 @@ class ProfilePage extends StatelessWidget {
                   title: Text('Log Out', style: AppTextStyles.bodyText(16)),
                   trailing:
                       Icon(Icons.arrow_forward_ios, color: AppColors.primary),
-                  onTap: () {
-                    Get.offAllNamed('/');
-                    Get.snackbar('Ke Login Page', '',
-                        snackPosition: SnackPosition.TOP);
+                  onTap: () async {
+                    Get.dialog(
+                      AlertDialog(
+                        title: Text("Konfirmasi"),
+                        content: Text("Apakah Anda yakin ingin logout?"),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              // Tutup dialog tanpa melakukan apa-apa
+                              Get.back();
+                            },
+                            child: Text("Tidak",style: TextStyle(color: AppColors.primary,),),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              // Tutup dialog lalu logout
+                              Get.back();
+                              await loginController.logout();
+                              Get.off(() => LoginPage());
+                            },
+                            child: Text("Ya",style: TextStyle(color: AppColors.primary,)),
+                          ),
+                        ],
+                      ),
+                    );
                   }),
             ],
           ),
