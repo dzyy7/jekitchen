@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:jekitchen/component/color.dart';
 import 'package:jekitchen/controllers/dashboard_controller.dart';
 import 'package:jekitchen/pages/home_page.dart';
 import 'package:jekitchen/pages/profile_page.dart';
@@ -28,6 +27,9 @@ class Dashboardpage extends StatelessWidget {
           onTap: (index) {
             dashboardController.selectedIndex.value = index;
           },
+          backgroundColor: AppColors.primary, 
+          selectedItemColor: AppColors.secondary,
+          unselectedItemColor: Colors.black54,
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.home_outlined),
@@ -38,7 +40,7 @@ class Dashboardpage extends StatelessWidget {
               label: "Notification",
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
+              icon: Icon(Icons.person_outline),
               label: "Profile",
             ),
           ],
